@@ -33,9 +33,15 @@ terraform apply
 
 ## Verification Performed
 
+![Web server running](screenshots/web-server-running.png)
+
 1. Web server accessible: confirmed nginx serving a page at the public IP
 2. Internal access allowed: SSH from web tier to database tier succeeds
+
+![Internal access allowed](screenshots/internal-access-success.png)
 3. External access blocked: direct SSH attempt to the database tier from outside the web subnet times out completely
+
+![External access blocked](screenshots/external-access-blocked.png)
 
 ## What I Would Add at Production Scale
 
