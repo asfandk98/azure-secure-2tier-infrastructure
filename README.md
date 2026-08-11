@@ -67,3 +67,17 @@ Performed a genuine RBAC and network security review across this project and the
 ### Network Security Findings and Fixes
 - The web tier's SSH rule was originally scoped to a wildcard destination; tightened to reference the web VM's specific private IP address directly
 - The database tier's SSH rule was originally scoped to the entire public subnet range; tightened to reference the web VM's specific private IP address instead of the broader subnet, removing the possibility of any future VM added to that subnet inheriting SSH access by default
+
+## Secrets Management (Week 9 Addition)
+
+Provisioned an Azure Key Vault with RBAC-based access control (not legacy access policies) as a centralized alternative to storing secrets across multiple disconnected locations (GitHub Secrets, plaintext files, etc.).
+
+- Confirmed Key Vault requires explicit role assignment before any identity, including the creator, can read or write secrets
+- Migrated the ACR registry password into Key Vault as a proof of concept
+- Verified the full round trip: storing a secret, then retrieving it programmatically, exactly how a real application or pipeline would request it at runtime
+- Noted that Azure CLI itself warns when displaying secret values in plaintext output, reinforcing that even convenient CLI access to secrets should be treated deliberately
+
+### What I Would Add at Production Scale (Secrets)
+- Migrate GitHub Actions to fetch secrets from Key Vault at pipeline runtime instead of storing them directly as GitHub Secrets
+- Enable Key Vault diagnostic logging to Azure Monitor for a full audit trail of every secret access
+- Set expiration dates on individual secrets, not just on the service principal credentials that reference them
