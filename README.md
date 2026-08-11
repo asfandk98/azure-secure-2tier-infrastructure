@@ -54,3 +54,16 @@ terraform apply
 ## Cost Note
 
 All resources use free-tier-eligible sizes (Standard_B1s) where possible. This project is deployed and destroyed on demand, not left running, to avoid unnecessary cost during learning.
+
+## Security Audit (Week 9)
+
+Performed a genuine RBAC and network security review across this project and the broader Azure subscription.
+
+### RBAC Findings
+- Confirmed the CI/CD service principal holds Contributor (not the higher-privilege Owner role) — appropriate for a pipeline that provisions and destroys full environments, without excessive administrative rights over IAM or billing
+- Confirmed service principal credentials have a defined 1-year expiration rather than no expiration at all
+- Identified a gap: no automated process currently tracks or triggers credential rotation ahead of expiry
+
+### Network Security Findings and Fixes
+- The web tier's SSH rule was originally scoped to a wildcard destination; tightened to reference the web VM's specific private IP address directly
+- The database tier's SSH rule was originally scoped to the entire public subnet range; tightened to reference the web VM's specific private IP address instead of the broader subnet, removing the possibility of any future VM added to that subnet inheriting SSH access by default

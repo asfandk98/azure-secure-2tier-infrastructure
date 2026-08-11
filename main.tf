@@ -58,7 +58,7 @@ resource "azurerm_network_security_group" "web" {
     source_port_range          = "*"
     destination_port_range     = "22"
     source_address_prefix      = var.admin_ip
-    destination_address_prefix = "*"
+    destination_address_prefix = azurerm_network_interface.web.private_ip_address
   }
 
   security_rule {
@@ -87,7 +87,7 @@ resource "azurerm_network_security_group" "db" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "10.0.1.0/24"
+    source_address_prefix      = "${azurerm_network_interface.web.private_ip_address}/32"
     destination_address_prefix = "*"
   }
 }
