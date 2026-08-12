@@ -25,3 +25,14 @@ variable "ssh_public_key" {
   description = "SSH public key for VM access"
   type        = string
 }
+
+variable "common_tags" {
+  description = "Tags applied to all resources for cost attribution and organization"
+  type        = map(string)
+  default = {
+    project     = "azure-secure-2tier-infrastructure"
+    environment = "learning"
+    owner       = "asfandyar-khan"
+    managed_by  = "terraform"
+  }
+}
