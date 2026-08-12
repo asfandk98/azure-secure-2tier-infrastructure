@@ -81,3 +81,20 @@ Provisioned an Azure Key Vault with RBAC-based access control (not legacy access
 - Migrate GitHub Actions to fetch secrets from Key Vault at pipeline runtime instead of storing them directly as GitHub Secrets
 - Enable Key Vault diagnostic logging to Azure Monitor for a full audit trail of every secret access
 - Set expiration dates on individual secrets, not just on the service principal credentials that reference them
+
+## Cost Governance (Week 10)
+
+Reviewed actual billing data and existing budget configuration rather than relying on assumptions.
+
+### Findings
+- Confirmed total spend across this entire multi-week learning project remained under $2, validating the consistent build-and-destroy discipline followed throughout
+- Identified Azure Container Registry as the single largest cost driver (roughly 70% of total spend) — the one resource left running continuously across weeks, unlike project infrastructure which is destroyed after each session
+- Audited an existing budget alert (configured in Week 1) and found all three alert thresholds had no Action Group attached — meaning the notification delivery mechanism was never actually completed, despite the budget itself appearing correctly configured
+- Created a proper Action Group with a verified email receiver
+- Found one alert threshold set to "Forecasted cost" instead of "Actual cost," inconsistent with the other two — corrected for consistency
+- As part of this review, verified all alert recipient email addresses on the account were legitimate and recognized
+
+### What I Would Add at Production Scale (Cost)
+- Migrate cost alerting from billing-account-level budgets to Azure Monitor alert rules, which support full Action Group integration natively
+- Apply consistent resource tagging (project, environment, owner) across all resources for meaningful cost attribution in Cost Management reports
+- Evaluate whether an always-on resource like a container registry justifies its continuous cost, or whether a lifecycle policy should periodically clean up unused images
