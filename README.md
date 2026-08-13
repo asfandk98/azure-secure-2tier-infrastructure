@@ -98,3 +98,16 @@ Reviewed actual billing data and existing budget configuration rather than relyi
 - Migrate cost alerting from billing-account-level budgets to Azure Monitor alert rules, which support full Action Group integration natively
 - Apply consistent resource tagging (project, environment, owner) across all resources for meaningful cost attribution in Cost Management reports
 - Evaluate whether an always-on resource like a container registry justifies its continuous cost, or whether a lifecycle policy should periodically clean up unused images
+
+## Cost Estimation with Infracost (Week 10)
+
+Ran Infracost against this project's Terraform code to generate a cost estimate before deployment, rather than discovering cost only after resources exist.
+
+### Results
+- Estimated baseline cost if run continuously: ~$7/month
+- The static public IP address was the single largest individual cost driver (~$3.65/month), exceeding the cost of either VM's disk storage
+- 10 of 13 resources (networking constructs: VNet, subnets, NSGs, NICs) carry no direct cost
+- In practice, actual spend is far lower than this baseline, since infrastructure is provisioned only for active sessions and destroyed immediately after, consistent with the cost discipline followed throughout this project
+
+### Why This Matters
+Integrating cost estimation into the Terraform workflow itself (rather than checking a bill after the fact) allows cost impact to be reviewed as part of `terraform plan`, the same point in the process where security and correctness are already being evaluated.
